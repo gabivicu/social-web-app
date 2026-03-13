@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(which composer:*)",
+      "Bash(composer --version)",
+      "Bash(symfony --version)"
+    ]
+  }
+}
