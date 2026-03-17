@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Micro Posts{% endblock %}
+
+{% block body %}
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Micro Posts</h1>
+        <a href="{{ path('app_micro_post_create') }}" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors">
+            Create new post
+        </a>
+    </div>
+
+    <div class="overflow-hidden rounded-xl shadow bg-white dark:bg-gray-800">
+        <table class="w-full">
+            <thead>
+                <tr class="bg-indigo-600 text-white text-left">
+                    <th class="px-4 py-3 font-semibold">ID</th>
+                    <th class="px-4 py-3 font-semibold">Title</th>
+                    <th class="px-4 py-3 font-semibold">Text</th>
+                    <th class="px-4 py-3 font-semibold">Created</th>
+                    <th class="px-4 py-3 font-semibold">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                {% for post in posts %}
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <td class="px-4 py-3">{{ post.id }}</td>
+                        <td class="px-4 py-3">
+                            <a href="{{ path('app_micro_post_show', {id: post.id}) }}" class="text-indigo-600 dark:text-indigo-400 hover:underline">
+                                {{ post.title }}
+                            </a>
+                        </td>
+                        <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ post.text|length > 50 ? post.text|slice(0, 50) ~ '...' : post.text }}</td>
+                        <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm">{{ post.created|date('Y-m-d H:i') }}</td>
+                        <td class="px-4 py-3">
+                            <a href="{{ path('app_micro_post_edit', {id: post.id}) }}" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded text-sm font-medium transition-colors">
+                                Edit
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">No micro posts found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

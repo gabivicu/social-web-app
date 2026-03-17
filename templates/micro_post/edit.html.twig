@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Micro Post{% endblock %}
+
+{% block body %}
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Edit Micro Post</h1>
+
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            <div class="mb-5">
+                {{ form_label(form.title, null, {'label_attr': {'class': 'block mb-1.5 font-semibold text-gray-700 dark:text-gray-300'}}) }}
+                {{ form_widget(form.title, {'attr': {'class': 'w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent'}}) }}
+                {{ form_errors(form.title) }}
+            </div>
+            <div class="mb-5">
+                {{ form_label(form.text, null, {'label_attr': {'class': 'block mb-1.5 font-semibold text-gray-700 dark:text-gray-300'}}) }}
+                {{ form_widget(form.text, {'attr': {'class': 'w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent min-h-[120px] resize-y'}}) }}
+                {{ form_errors(form.text) }}
+            </div>
+            <div class="mt-6 flex gap-3 items-center">
+                {{ form_widget(form.submit, {'attr': {'class': 'px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors cursor-pointer'}}) }}
+                <a href="{{ path('app_micro_post') }}" class="px-5 py-2.5 bg-gray-500 hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition-colors">Cancel</a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

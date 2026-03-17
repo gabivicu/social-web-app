@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block body %}
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">{{ post.title }}</h1>
+        <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">{{ post.text }}</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Created: {{ post.created|date('Y-m-d H:i:s') }}</p>
+        <div class="flex gap-3">
+            <a href="{{ path('app_micro_post_edit', {id: post.id}) }}" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-medium transition-colors">Edit</a>
+            <a href="{{ path('app_micro_post') }}" class="px-5 py-2.5 bg-gray-500 hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition-colors">Back to list</a>
+        </div>
+    </div>
+{% endblock %}
