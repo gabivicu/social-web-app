@@ -2,7 +2,9 @@
 
 namespace App\Service;
 
+use App\Entity\Comment;
 use App\Entity\MicroPost;
+use App\Form\CommentType;
 use App\Form\MicroPostType;
 use App\Repository\MicroPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,5 +63,21 @@ class MicroPostService
         $microPost = $this->microPostRepository->find($id);
         $microPost->setLikes($microPost->getLikes() + 1);
         $this->em->flush();
+    }
+
+    public function createCommentForm(int $postId, Request $request): FormInterface
+    {
+        $comment = new Comment();
+        $form = $this->formFactory->create(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post = $this->microPostRepository->find($postId);
+            $comment->setPost($post);
+            $this->em->persist($comment);
+            $this->em->flush();
+        }
+
+        return $form;
     }
 }

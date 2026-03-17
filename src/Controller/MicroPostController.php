@@ -6,6 +6,7 @@ use App\Service\MicroPostService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class MicroPostController extends AbstractController
@@ -65,10 +66,25 @@ final class MicroPostController extends AbstractController
     }
 
     #[Route('/micro/post/{id}', name: 'app_micro_post_show')]
-    public function show(int $id): Response
+    public function show(int $id, Request $request): Response
     {
+        $post = $this->microPostService->find($id);
+
+        if (!$post) {
+            throw $this->createNotFoundException('Post not found.');
+        }
+
+        $commentForm = $this->microPostService->createCommentForm($id, $request);
+
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $this->addFlash('success', 'Comment added!');
+
+            return $this->redirectToRoute('app_micro_post_show', ['id' => $id]);
+        }
+
         return $this->render('micro_post/show.html.twig', [
-            'post' => $this->microPostService->find($id),
+            'post' => $post,
+            'comment_form' => $commentForm,
         ]);
     }
 }

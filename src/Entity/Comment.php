@@ -3,11 +3,18 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
+use App\Validator\CommentValidator;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
 {
+    public static function loadValidatorMetadata(ClassMetadata $metadata): void
+    {
+        CommentValidator::loadValidatorMetadata($metadata);
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
