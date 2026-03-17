@@ -22,7 +22,7 @@ class MicroPostService
 
     public function findAll(): array
     {
-        return $this->microPostRepository->findAll();
+        return $this->microPostRepository->findAllWithComments();
     }
 
     public function find(int $id): ?MicroPost
