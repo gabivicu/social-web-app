@@ -7,7 +7,13 @@
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">{{ post.title }}</h1>
         <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">{{ post.text }}</p>
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Created: {{ post.created|date('Y-m-d H:i:s') }}</p>
-        <div class="flex gap-3">
+        <div class="flex gap-3 items-center">
+            <form action="{{ path('app_micro_post_like', {id: post.id}) }}" method="post">
+                <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 bg-pink-500 hover:bg-pink-600 text-white rounded-lg text-sm font-medium transition-colors cursor-pointer">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/></svg>
+                    Like ({{ post.likes }})
+                </button>
+            </form>
             <a href="{{ path('app_micro_post_edit', {id: post.id}) }}" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-medium transition-colors">Edit</a>
             <a href="{{ path('app_micro_post') }}" class="px-5 py-2.5 bg-gray-500 hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition-colors">Back to list</a>
         </div>

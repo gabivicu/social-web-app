@@ -54,6 +54,16 @@ final class MicroPostController extends AbstractController
         ]);
     }
 
+    #[Route('/micro/post/{id}/like', name: 'app_micro_post_like', methods: ['POST'])]
+    public function like(int $id, Request $request): Response
+    {
+        $this->microPostService->like($id);
+
+        $referer = $request->headers->get('referer');
+
+        return $this->redirect($referer ?: $this->generateUrl('app_micro_post'));
+    }
+
     #[Route('/micro/post/{id}', name: 'app_micro_post_show')]
     public function show(int $id): Response
     {

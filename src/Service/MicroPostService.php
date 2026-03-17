@@ -55,4 +55,11 @@ class MicroPostService
 
         return $form;
     }
+
+    public function like(int $id): void
+    {
+        $microPost = $this->microPostRepository->find($id);
+        $microPost->setLikes($microPost->getLikes() + 1);
+        $this->em->flush();
+    }
 }

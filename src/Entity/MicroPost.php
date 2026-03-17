@@ -29,6 +29,9 @@ class MicroPost
     #[ORM\Column]
     private ?\DateTime $created = null;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private int $likes = 0;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -66,6 +69,18 @@ class MicroPost
     public function setCreated(\DateTime $created): static
     {
         $this->created = $created;
+
+        return $this;
+    }
+
+    public function getLikes(): int
+    {
+        return $this->likes;
+    }
+
+    public function setLikes(int $likes): static
+    {
+        $this->likes = $likes;
 
         return $this;
     }
