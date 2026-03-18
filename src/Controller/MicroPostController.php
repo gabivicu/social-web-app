@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class MicroPostController extends AbstractController
 {
@@ -23,6 +24,7 @@ final class MicroPostController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_VERIFIED')]
     #[Route('/micro/post/create', name: 'app_micro_post_create')]
     public function create(Request $request): Response
     {
