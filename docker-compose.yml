@@ -10,6 +10,7 @@ services:
       APP_ENV: dev
       APP_SECRET: fa92bdbeaf14b1f67db7cfb4ee2edca7
       DATABASE_URL: mysql://symfony:symfony@db:3306/symfony_db?serverVersion=8.0
+      MAILER_DSN: smtp://mailer:1025
     depends_on:
       db:
         condition: service_healthy
@@ -44,6 +45,14 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - symfony
+
+  mailer:
+    image: axllent/mailpit
+    ports:
+      - "127.0.0.1:1025:1025"
+      - "127.0.0.1:8025:8025"
     networks:
       - symfony
 
