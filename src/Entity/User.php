@@ -42,9 +42,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: MicroPost::class, mappedBy: 'likedBy')]
     private Collection $liked;
 
+    /**
+     * @var Collection<int, Comment>
+     */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'author')]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->liked = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -156,6 +163,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->liked->removeElement($liked)) {
             $liked->removeLikedBy($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            if ($comment->getAuthor() === $this) {
+                $comment->setAuthor(null);
+            }
         }
 
         return $this;

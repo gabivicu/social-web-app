@@ -8,6 +8,7 @@ use App\Form\CommentType;
 use App\Form\MicroPostType;
 use App\Repository\MicroPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +19,7 @@ class MicroPostService
         private MicroPostRepository $microPostRepository,
         private EntityManagerInterface $em,
         private FormFactoryInterface $formFactory,
+        private Security $security,
     ) {}
 
     public function findAll(): array
@@ -74,7 +76,8 @@ class MicroPostService
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $this->microPostRepository->find($postId);
             $comment->setPost($post);
-            $comment->setAuthorName('Anonymous');
+            $comment->setAuthor($this->security->getUser());
+            $comment->setAuthorName($this->security->getUser()->getUserIdentifier());
             $comment->setCreatedAt(new \DateTime());
             $this->em->persist($comment);
             $this->em->flush();
