@@ -6,7 +6,7 @@
     <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">{{ post.title }}</h1>
         <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">{{ post.text }}</p>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">By: {{ post.author.email }}</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">By: <a href="{{ path('app_user_profile', {id: post.author.id}) }}" class="text-indigo-600 dark:text-indigo-400 hover:underline">{{ post.author.email }}</a></p>
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Created: {{ post.created|date('Y-m-d H:i:s') }}</p>
         <div class="flex gap-3 items-center">
             <form action="{{ path('app_micro_post_like', {id: post.id}) }}" method="post">
@@ -39,7 +39,7 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="mb-1">
-                                <span class="block font-semibold text-gray-900 dark:text-white text-sm">{{ comment.authorName|default('Anonymous') }}</span>
+                                <a href="{{ path('app_user_profile', {id: comment.author.id}) }}" class="block font-semibold text-indigo-600 dark:text-indigo-400 hover:underline text-sm">{{ comment.authorName|default('Anonymous') }}</a>
                                 <span class="block text-xs text-gray-400 dark:text-gray-500">{{ comment.createdAt ? comment.createdAt|date('M d, Y \\a\\t H:i') : '' }}</span>
                             </div>
                             <p class="text-gray-700 dark:text-gray-300">{{ comment.text }}</p>

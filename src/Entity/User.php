@@ -212,6 +212,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return Collection<int, MicroPost>
+     */
+    public function getMicroPosts(): Collection
+    {
+        return $this->microPosts;
+    }
+
     public function isVerified(): bool
     {
         return $this->isVerified;

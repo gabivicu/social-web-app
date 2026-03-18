@@ -35,7 +35,9 @@
                                 {{ post.title }}
                             </a>
                         </td>
-                        <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ post.author.email }}</td>
+                        <td class="px-4 py-3">
+                            <a href="{{ path('app_user_profile', {id: post.author.id}) }}" class="text-indigo-600 dark:text-indigo-400 hover:underline">{{ post.author.email }}</a>
+                        </td>
                         <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ post.text|length > 50 ? post.text|slice(0, 50) ~ '...' : post.text }}</td>
                         <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm">{{ post.created|date('Y-m-d H:i') }}</td>
                         <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ post.comments|length }}</td>
