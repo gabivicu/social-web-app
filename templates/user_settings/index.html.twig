@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block body %}
+    <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+        <h1 class="text-2xl font-bold mb-6">Profile Settings</h1>
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    {{ form_label(form.name, null, {'label_attr': {'class': 'block text-sm font-medium mb-1'}}) }}
+                    {{ form_widget(form.name, {'attr': {'class': 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500', 'placeholder': 'Your name'}}) }}
+                    {{ form_errors(form.name) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.twitterUsername, null, {'label_attr': {'class': 'block text-sm font-medium mb-1'}}) }}
+                    {{ form_widget(form.twitterUsername, {'attr': {'class': 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500', 'placeholder': '@username'}}) }}
+                    {{ form_errors(form.twitterUsername) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.company, null, {'label_attr': {'class': 'block text-sm font-medium mb-1'}}) }}
+                    {{ form_widget(form.company, {'attr': {'class': 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500', 'placeholder': 'Company name'}}) }}
+                    {{ form_errors(form.company) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.location, null, {'label_attr': {'class': 'block text-sm font-medium mb-1'}}) }}
+                    {{ form_widget(form.location, {'attr': {'class': 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500', 'placeholder': 'City, Country'}}) }}
+                    {{ form_errors(form.location) }}
+                </div>
+
+                <div class="md:col-span-2">
+                    {{ form_label(form.websiteUrl, null, {'label_attr': {'class': 'block text-sm font-medium mb-1'}}) }}
+                    {{ form_widget(form.websiteUrl, {'attr': {'class': 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500', 'placeholder': 'https://example.com'}}) }}
+                    {{ form_errors(form.websiteUrl) }}
+                </div>
+
+                <div class="md:col-span-2">
+                    {{ form_label(form.bio, null, {'label_attr': {'class': 'block text-sm font-medium mb-1'}}) }}
+                    {{ form_widget(form.bio, {'attr': {'class': 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[100px] resize-y', 'placeholder': 'Tell us about yourself...'}}) }}
+                    {{ form_errors(form.bio) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.dateOfBirth, null, {'label_attr': {'class': 'block text-sm font-medium mb-1'}}) }}
+                    {{ form_widget(form.dateOfBirth, {'attr': {'class': 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'}}) }}
+                    {{ form_errors(form.dateOfBirth) }}
+                </div>
+            </div>
+
+            <div class="mt-6">
+                {{ form_widget(form.save, {'attr': {'class': 'px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors cursor-pointer'}}) }}
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

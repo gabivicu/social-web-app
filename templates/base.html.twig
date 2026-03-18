@@ -15,6 +15,7 @@
                 <div class="flex items-center gap-4">
                     {% if app.user %}
                         <span class="text-sm text-gray-600 dark:text-gray-400">{{ app.user.userIdentifier }}</span>
+                        <a href="{{ path('app_settings') }}" class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">Settings</a>
                         <a href="{{ path('app_logout') }}" class="text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300">Logout</a>
                     {% else %}
                         <a href="{{ path('app_login') }}" class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">Login</a>
