@@ -20,7 +20,7 @@ class AppFixtures extends Fixture
             'Spain' => 0,
         ];
 
-        $comments = [
+        $commentTexts = [
             'Great post, thanks for sharing!',
             'I totally agree with this.',
             'Very interesting perspective.',
@@ -31,6 +31,8 @@ class AppFixtures extends Fixture
             'Well written, keep it up!',
         ];
 
+        $authors = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'];
+
         foreach ($countries as $country => $likes) {
             $microPost = new MicroPost();
             $microPost->setTitle($country);
@@ -40,12 +42,14 @@ class AppFixtures extends Fixture
             $manager->persist($microPost);
 
             $numComments = rand(2, 4);
-            $shuffled = $comments;
+            $shuffled = $commentTexts;
             shuffle($shuffled);
 
             for ($i = 0; $i < $numComments; $i++) {
                 $comment = new Comment();
                 $comment->setText($shuffled[$i]);
+                $comment->setAuthorName($authors[array_rand($authors)]);
+                $comment->setCreatedAt(new DateTime('-' . rand(1, 30) . ' days'));
                 $comment->setPost($microPost);
                 $manager->persist($comment);
             }

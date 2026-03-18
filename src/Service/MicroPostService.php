@@ -74,6 +74,8 @@ class MicroPostService
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $this->microPostRepository->find($postId);
             $comment->setPost($post);
+            $comment->setAuthorName('Anonymous');
+            $comment->setCreatedAt(new \DateTime());
             $this->em->persist($comment);
             $this->em->flush();
         }

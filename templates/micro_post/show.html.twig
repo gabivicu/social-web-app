@@ -25,10 +25,22 @@
         </h2>
 
         {% if post.comments|length > 0 %}
-            <div class="space-y-4 mb-8">
+            <div class="relative mb-8">
                 {% for comment in post.comments %}
-                    <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                        <p class="text-gray-700 dark:text-gray-300">{{ comment.text }}</p>
+                    <div class="relative flex gap-4 {% if not loop.last %}pb-8{% endif %}">
+                        {% if not loop.last %}
+                            <div class="absolute left-5 top-10 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-600"></div>
+                        {% endif %}
+                        <div class="shrink-0 w-10 h-10 rounded-full bg-indigo-500 dark:bg-indigo-600 flex items-center justify-center text-white font-semibold text-sm z-10 border-2 border-white dark:border-gray-800">
+                            {{ comment.authorName|default('A')|first|upper }}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="mb-1">
+                                <span class="block font-semibold text-gray-900 dark:text-white text-sm">{{ comment.authorName|default('Anonymous') }}</span>
+                                <span class="block text-xs text-gray-400 dark:text-gray-500">{{ comment.createdAt ? comment.createdAt|date('M d, Y \\a\\t H:i') : '' }}</span>
+                            </div>
+                            <p class="text-gray-700 dark:text-gray-300">{{ comment.text }}</p>
+                        </div>
                     </div>
                 {% endfor %}
             </div>

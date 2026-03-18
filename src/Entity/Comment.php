@@ -23,6 +23,12 @@ class Comment
     #[ORM\Column(length: 500)]
     private ?string $text = null;
 
+    #[ORM\Column(length: 100)]
+    private ?string $authorName = null;
+
+    #[ORM\Column]
+    private ?\DateTime $createdAt = null;
+
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?MicroPost $post = null;
@@ -52,6 +58,30 @@ class Comment
     public function setPost(?MicroPost $post): static
     {
         $this->post = $post;
+
+        return $this;
+    }
+
+    public function getAuthorName(): ?string
+    {
+        return $this->authorName;
+    }
+
+    public function setAuthorName(string $authorName): static
+    {
+        $this->authorName = $authorName;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTime $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
