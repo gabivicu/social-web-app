@@ -40,6 +40,7 @@ class MicroPostService
 
         if ($form->isSubmitted() && $form->isValid()) {
             $microPost->setCreated(new \DateTime());
+            $microPost->setAuthor($this->security->getUser());
             $this->em->persist($microPost);
             $this->em->flush();
         }

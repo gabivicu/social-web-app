@@ -48,10 +48,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'author')]
     private Collection $comments;
 
+    /**
+     * @var Collection<int, MicroPost>
+     */
+    #[ORM\OneToMany(targetEntity: MicroPost::class, mappedBy: 'author')]
+    private Collection $microPosts;
+
     public function __construct()
     {
         $this->liked = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->microPosts = new ArrayCollection();
     }
 
     public function getId(): ?int

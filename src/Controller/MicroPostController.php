@@ -42,6 +42,12 @@ final class MicroPostController extends AbstractController
     #[Route('/micro/post/{id}/edit', name: 'app_micro_post_edit')]
     public function edit(int $id, Request $request): Response
     {
+        $post = $this->microPostService->find($id);
+
+        if (!$post || $post->getAuthor() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('You can only edit your own posts.');
+        }
+
         $form = $this->microPostService->editForm($id, $request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -18,6 +18,7 @@
                 <tr class="bg-indigo-600 text-white text-left">
                     <th class="px-4 py-3 font-semibold">ID</th>
                     <th class="px-4 py-3 font-semibold">Title</th>
+                    <th class="px-4 py-3 font-semibold">Author</th>
                     <th class="px-4 py-3 font-semibold">Text</th>
                     <th class="px-4 py-3 font-semibold">Created</th>
                     <th class="px-4 py-3 font-semibold">Comments</th>
@@ -34,6 +35,7 @@
                                 {{ post.title }}
                             </a>
                         </td>
+                        <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ post.author.email }}</td>
                         <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ post.text|length > 50 ? post.text|slice(0, 50) ~ '...' : post.text }}</td>
                         <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm">{{ post.created|date('Y-m-d H:i') }}</td>
                         <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ post.comments|length }}</td>
@@ -46,14 +48,16 @@
                             </form>
                         </td>
                         <td class="px-4 py-3">
-                            <a href="{{ path('app_micro_post_edit', {id: post.id}) }}" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded text-sm font-medium transition-colors">
-                                Edit
-                            </a>
+                            {% if app.user and app.user.id == post.author.id %}
+                                <a href="{{ path('app_micro_post_edit', {id: post.id}) }}" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded text-sm font-medium transition-colors">
+                                    Edit
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="7" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">No micro posts found.</td>
+                        <td colspan="8" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">No micro posts found.</td>
                     </tr>
                 {% endfor %}
             </tbody>
