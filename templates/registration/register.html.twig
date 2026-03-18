@@ -22,10 +22,18 @@
             </div>
 
             <div class="mb-4">
-                {{ form_label(registrationForm.plainPassword, 'Password', {'label_attr': {'class': 'block text-sm font-medium mb-1'}}) }}
-                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'}}) }}
-                {{ form_errors(registrationForm.plainPassword) }}
+                {{ form_label(registrationForm.plainPassword.first, 'Password', {'label_attr': {'class': 'block text-sm font-medium mb-1'}}) }}
+                {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'}}) }}
+                {{ form_errors(registrationForm.plainPassword.first) }}
             </div>
+
+            <div class="mb-4">
+                {{ form_label(registrationForm.plainPassword.second, 'Confirm Password', {'label_attr': {'class': 'block text-sm font-medium mb-1'}}) }}
+                {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'}}) }}
+                {{ form_errors(registrationForm.plainPassword.second) }}
+            </div>
+
+            {{ form_errors(registrationForm.plainPassword) }}
 
             <div class="mb-6">
                 <label class="flex items-center gap-2 text-sm">
