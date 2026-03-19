@@ -6,7 +6,20 @@
     <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">{{ post.title }}</h1>
         <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">{{ post.text }}</p>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">By: <a href="{{ path('app_user_profile', {id: post.author.id}) }}" class="text-indigo-600 dark:text-indigo-400 hover:underline">{{ post.author.email }}</a></p>
+        <div class="flex items-center gap-3 mb-2">
+            <a href="{{ path('app_user_profile', {id: post.author.id}) }}">
+                {% if post.author.userProfile and post.author.userProfile.image %}
+                    <img src="/uploads/avatars/{{ post.author.userProfile.image }}"
+                         alt="{{ post.author.email }}"
+                         class="w-8 h-8 rounded-full object-cover">
+                {% else %}
+                    <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-xs">
+                        {{ post.author.email|first|upper }}
+                    </div>
+                {% endif %}
+            </a>
+            <p class="text-sm text-gray-500 dark:text-gray-400">By: <a href="{{ path('app_user_profile', {id: post.author.id}) }}" class="text-indigo-600 dark:text-indigo-400 hover:underline">{{ post.author.email }}</a></p>
+        </div>
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Created: {{ post.created|date('Y-m-d H:i:s') }}</p>
         <div class="flex gap-3 items-center">
             <form action="{{ path('app_micro_post_like', {id: post.id}) }}" method="post">
@@ -34,9 +47,15 @@
                         {% if not loop.last %}
                             <div class="absolute left-5 top-10 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-600"></div>
                         {% endif %}
-                        <div class="shrink-0 w-10 h-10 rounded-full bg-indigo-500 dark:bg-indigo-600 flex items-center justify-center text-white font-semibold text-sm z-10 border-2 border-white dark:border-gray-800">
-                            {{ comment.authorName|default('A')|first|upper }}
-                        </div>
+                        {% if comment.author.userProfile and comment.author.userProfile.image %}
+                            <img src="/uploads/avatars/{{ comment.author.userProfile.image }}"
+                                 alt="{{ comment.authorName|default('A') }}"
+                                 class="shrink-0 w-10 h-10 rounded-full object-cover z-10 border-2 border-white dark:border-gray-800">
+                        {% else %}
+                            <div class="shrink-0 w-10 h-10 rounded-full bg-indigo-500 dark:bg-indigo-600 flex items-center justify-center text-white font-semibold text-sm z-10 border-2 border-white dark:border-gray-800">
+                                {{ comment.authorName|default('A')|first|upper }}
+                            </div>
+                        {% endif %}
                         <div class="flex-1 min-w-0">
                             <div class="mb-1">
                                 <a href="{{ path('app_user_profile', {id: comment.author.id}) }}" class="block font-semibold text-indigo-600 dark:text-indigo-400 hover:underline text-sm">{{ comment.authorName|default('Anonymous') }}</a>

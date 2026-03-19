@@ -194,7 +194,7 @@
                     <div class="px-8 py-5">
                         <p class="text-sm text-gray-700 dark:text-gray-300">{{ comment.text }}</p>
                         <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">
-                            {{ comment.created|date('M d, Y \\a\\t H:i') }}
+                            {{ comment.createdAt|date('M d, Y \\a\\t H:i') }}
                         </p>
                     </div>
                 {% endfor %}
