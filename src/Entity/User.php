@@ -56,6 +56,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: MicroPost::class, mappedBy: 'author')]
     private Collection $microPosts;
 
+    /**
+     * @var Collection<int, User> Users that this user follows
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'followers')]
+    #[ORM\JoinTable(name: 'user_follows')]
+    private Collection $following;
+
+    /**
+     * @var Collection<int, User> Users that follow this user
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'following')]
+    private Collection $followers;
+
     #[ORM\Column]
     private bool $isVerified = false;
 
@@ -67,6 +80,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->liked = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->microPosts = new ArrayCollection();
+        $this->following = new ArrayCollection();
+        $this->followers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -218,6 +233,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getMicroPosts(): Collection
     {
         return $this->microPosts;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getFollowing(): Collection
+    {
+        return $this->following;
+    }
+
+    public function follow(User $user): static
+    {
+        if (!$this->following->contains($user) && $user !== $this) {
+            $this->following->add($user);
+        }
+
+        return $this;
+    }
+
+    public function unfollow(User $user): static
+    {
+        $this->following->removeElement($user);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getFollowers(): Collection
+    {
+        return $this->followers;
+    }
+
+    public function isFollowing(User $user): bool
+    {
+        return $this->following->contains($user);
     }
 
     public function isVerified(): bool
