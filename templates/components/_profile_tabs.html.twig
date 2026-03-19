@@ -4,10 +4,12 @@
     Variables:
       - posts      : collection of MicroPost objects for the user
       - user       : User entity
-      - activeTab  : (optional) string — 'posts' | 'comments' | 'likes' | 'following' (default: 'posts')
+      - feedPosts  : (optional) collection of MicroPost objects from followed users
+      - activeTab  : (optional) string — 'posts' | 'comments' | 'likes' | 'following' | 'feed' (default: 'posts')
 #}
 
 {% set activeTab = activeTab ?? 'posts' %}
+{% set feedPosts = feedPosts ?? [] %}
 
 {# ── Tab Navigation ── #}
 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
@@ -108,6 +110,31 @@
                 {{ user.following|length }}
             </span>
         </a>
+
+        {# Feed Tab — only visible on own profile #}
+        {% if app.user and app.user.id == user.id %}
+            <a href="{{ path('app_user_profile', {id: user.id}) }}?tab=feed"
+               class="flex items-center gap-3 px-10 py-4 text-sm font-medium transition-colors
+                      {% if activeTab == 'feed' %}
+                          border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 dark:border-indigo-400
+                      {% else %}
+                          text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200
+                      {% endif %}">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z"/>
+                </svg>
+                Feed
+                <span class="ml-1 px-2 py-0.5 text-xs rounded-full
+                             {% if activeTab == 'feed' %}
+                                 bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300
+                             {% else %}
+                                 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400
+                             {% endif %}">
+                    {{ feedPosts|length }}
+                </span>
+            </a>
+        {% endif %}
 
     </div>
 
@@ -240,6 +267,63 @@
                           d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
                 <p class="text-gray-500 dark:text-gray-400">Not following anyone yet.</p>
+            </div>
+        {% endif %}
+
+    {% elseif activeTab == 'feed' %}
+        {% if feedPosts|length > 0 %}
+            <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                {% for post in feedPosts %}
+                    <a href="{{ path('app_micro_post_show', {id: post.id}) }}"
+                       class="block px-8 py-5 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="flex items-start gap-3 min-w-0 flex-1">
+                                {# Author avatar #}
+                                <div class="shrink-0 w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-xs mt-0.5">
+                                    {{ post.author.email|first|upper }}
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-xs text-indigo-600 dark:text-indigo-400 font-medium mb-1">
+                                        {{ post.author.email }}
+                                    </p>
+                                    <h3 class="font-semibold text-gray-900 dark:text-white mb-1">{{ post.title }}</h3>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                                        {{ post.text|length > 200 ? post.text|slice(0, 200) ~ '...' : post.text }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="shrink-0 flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                    </svg>
+                                    {{ post.comments|length }}
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                              d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                                              clip-rule="evenodd"/>
+                                    </svg>
+                                    {{ post.likes }}
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-2 ml-11">
+                            {{ post.created|date('M d, Y \\a\\t H:i') }}
+                        </p>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="px-8 py-12 text-center">
+                <svg class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z"/>
+                </svg>
+                <p class="text-gray-500 dark:text-gray-400">No posts from people you follow yet.</p>
+                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Follow users to see their posts here.</p>
             </div>
         {% endif %}
     {% endif %}

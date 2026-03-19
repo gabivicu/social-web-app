@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\MicroPostRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class UserProfileController extends AbstractController
 {
     #[Route('/user/{id}', name: 'app_user_profile')]
-    public function show(int $id, UserRepository $userRepository): Response
+    public function show(int $id, UserRepository $userRepository, MicroPostRepository $microPostRepository): Response
     {
         $user = $userRepository->findWithRelations($id);
 
@@ -22,10 +23,17 @@ final class UserProfileController extends AbstractController
             throw $this->createNotFoundException('User not found.');
         }
 
+        // Only load feed posts when viewing your own profile
+        $feedPosts = [];
+        if ($this->getUser() && $this->getUser()->getId() === $user->getId()) {
+            $feedPosts = $microPostRepository->findByFollowedUsers($user->getId());
+        }
+
         return $this->render('user_profile/show.html.twig', [
             'user' => $user,
             'profile' => $user->getUserProfile(),
             'posts' => $user->getMicroPosts(),
+            'feedPosts' => $feedPosts,
         ]);
     }
 

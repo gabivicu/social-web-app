@@ -126,6 +126,7 @@
     {% include 'components/_profile_tabs.html.twig' with {
         posts: posts,
         user: user,
+        feedPosts: feedPosts,
         activeTab: app.request.query.get('tab', 'posts')
     } %}
 {% endblock %}
