@@ -10,9 +10,15 @@
         <div class="h-32 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
         <div class="px-8 pb-8">
             <div class="flex flex-col sm:flex-row items-center sm:items-end gap-4 -mt-12">
-                <div class="shrink-0 w-24 h-24 rounded-full bg-indigo-600 flex items-center justify-center text-white text-4xl font-bold ring-4 ring-white dark:ring-gray-800 shadow-lg">
-                    {{ user.email|first|upper }}
-                </div>
+                {% if profile and profile.image %}
+                    <img src="/uploads/avatars/{{ profile.image }}"
+                         alt="{{ displayName }}"
+                         class="shrink-0 w-24 h-24 rounded-full object-cover ring-4 ring-white dark:ring-gray-800 shadow-lg">
+                {% else %}
+                    <div class="shrink-0 w-24 h-24 rounded-full bg-indigo-600 flex items-center justify-center text-white text-4xl font-bold ring-4 ring-white dark:ring-gray-800 shadow-lg">
+                        {{ user.email|first|upper }}
+                    </div>
+                {% endif %}
                 <div class="flex-1 text-center sm:text-left sm:pb-1">
                     <h1 class="text-2xl font-bold">{{ displayName }}</h1>
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ user.email }}</p>
