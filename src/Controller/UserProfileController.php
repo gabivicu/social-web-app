@@ -16,7 +16,7 @@ final class UserProfileController extends AbstractController
     #[Route('/user/{id}', name: 'app_user_profile')]
     public function show(int $id, UserRepository $userRepository): Response
     {
-        $user = $userRepository->find($id);
+        $user = $userRepository->findWithRelations($id);
 
         if (!$user) {
             throw $this->createNotFoundException('User not found.');

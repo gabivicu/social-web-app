@@ -29,7 +29,7 @@ class MicroPostService
 
     public function find(int $id): ?MicroPost
     {
-        return $this->microPostRepository->find($id);
+        return $this->microPostRepository->findWithAllRelations($id);
     }
 
     public function createForm(Request $request): FormInterface

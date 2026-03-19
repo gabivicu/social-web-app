@@ -33,28 +33,42 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Fetch a user with all relations needed for the profile page — avoids N+1:
+     *  - userProfile
+     *  - microPosts + their comments
+     *  - comments written by the user
+     *  - following list + their userProfile
+     *  - followers list
+     */
+    public function findWithRelations(int $id): ?User
+    {
+        // First query: user + profile + posts + post comments
+        $this->createQueryBuilder('u')
+            ->leftJoin('u.userProfile', 'up')
+            ->addSelect('up')
+            ->leftJoin('u.microPosts', 'mp')
+            ->addSelect('mp')
+            ->leftJoin('mp.comments', 'mpc')
+            ->addSelect('mpc')
+            ->leftJoin('u.comments', 'uc')
+            ->addSelect('uc')
+            ->where('u.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
 
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        // Second query: user + following + their profiles (separate to avoid Cartesian product)
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.following', 'f')
+            ->addSelect('f')
+            ->leftJoin('f.userProfile', 'fp')
+            ->addSelect('fp')
+            ->leftJoin('u.followers', 'fl')
+            ->addSelect('fl')
+            ->where('u.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

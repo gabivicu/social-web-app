@@ -17,6 +17,8 @@ class MicroPostRepository extends ServiceEntityRepository
     }
 
     /**
+     * Fetch all posts with comments and authors — avoids N+1 on the index page.
+     *
      * @return MicroPost[]
      */
     public function findAllWithComments(): array
@@ -24,7 +26,28 @@ class MicroPostRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')
             ->leftJoin('p.comments', 'c')
             ->addSelect('c')
+            ->leftJoin('p.author', 'a')
+            ->addSelect('a')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Fetch a single post with all relations needed for the show page:
+     * author, comments and each comment's author — avoids N+1.
+     */
+    public function findWithAllRelations(int $id): ?MicroPost
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.author', 'a')
+            ->addSelect('a')
+            ->leftJoin('p.comments', 'c')
+            ->addSelect('c')
+            ->leftJoin('c.author', 'ca')
+            ->addSelect('ca')
+            ->where('p.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }
