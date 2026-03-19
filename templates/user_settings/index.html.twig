@@ -13,11 +13,14 @@
             {# Current avatar preview #}
             <div class="shrink-0 p-2">
                 {% if profile is defined and profile.image %}
-                    <img src="/uploads/avatars/{{ profile.image }}"
+                    <img id="avatar-preview"
+                         src="/uploads/avatars/{{ profile.image }}"
                          alt="Profile image"
-                         class="w-24 h-24 rounded-full object-cover ring-4 ring-indigo-100 dark:ring-gray-700 shadow-lg">
+                         class="w-24 h-24 rounded-full object-cover ring-4 ring-indigo-100 dark:ring-gray-700 shadow-lg cursor-pointer"
+                         title="Click to change image">
                 {% else %}
-                    <div class="w-24 h-24 rounded-full bg-indigo-600 flex items-center justify-center text-white text-4xl font-bold ring-4 ring-indigo-100 dark:ring-gray-700 shadow-lg">
+                    <div id="avatar-preview-fallback"
+                         class="w-24 h-24 rounded-full bg-indigo-600 flex items-center justify-center text-white text-4xl font-bold ring-4 ring-indigo-100 dark:ring-gray-700 shadow-lg">
                         {{ app.user.email|first|upper }}
                     </div>
                 {% endif %}
@@ -93,4 +96,28 @@
     </div>
 
     {{ form_end(form) }}
+
+    {# ── Crop Modal ── #}
+    <div id="crop-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-semibold">Crop Profile Image</h3>
+            </div>
+            <div class="p-4">
+                <div class="max-h-[60vh] overflow-hidden">
+                    <img id="crop-image" class="block max-w-full" alt="Image to crop">
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
+                <button type="button" id="crop-cancel"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                    Cancel
+                </button>
+                <button type="button" id="crop-save"
+                        class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors">
+                    Crop & Save
+                </button>
+            </div>
+        </div>
+    </div>
 {% endblock %}
