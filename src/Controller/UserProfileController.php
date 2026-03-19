@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -48,7 +49,7 @@ final class UserProfileController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/user/{id}/unfollow', name: 'app_user_unfollow', methods: ['POST'])]
-    public function unfollow(int $id, UserRepository $userRepository, EntityManagerInterface $em): Response
+    public function unfollow(int $id, UserRepository $userRepository, EntityManagerInterface $em, Request $request): Response
     {
         $userToUnfollow = $userRepository->find($id);
 
@@ -60,6 +61,12 @@ final class UserProfileController extends AbstractController
         $currentUser = $this->getUser();
         $currentUser->unfollow($userToUnfollow);
         $em->flush();
+
+        // Redirect back to the page that initiated the unfollow (e.g. own profile following tab)
+        $redirectTo = $request->request->get('redirect_to');
+        if ($redirectTo) {
+            return $this->redirect($redirectTo);
+        }
 
         return $this->redirectToRoute('app_user_profile', ['id' => $id]);
     }
