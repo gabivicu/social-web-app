@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block body %}
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Notifications</h1>
+
+    {% if notifications|length > 0 %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow divide-y divide-gray-200 dark:divide-gray-700">
+            {% for notification in notifications %}
+                <div class="flex items-center gap-4 px-6 py-4 {{ not notification.seen ? 'bg-indigo-50 dark:bg-indigo-900/20' : '' }}">
+                    <a href="{{ path('app_user_profile', {id: notification.actor.id}) }}">
+                        {% if notification.actor.userProfile and notification.actor.userProfile.image %}
+                            <img src="/uploads/avatars/{{ notification.actor.userProfile.image }}"
+                                 alt="{{ notification.actor.email }}"
+                                 class="w-10 h-10 rounded-full object-cover">
+                        {% else %}
+                            <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-sm">
+                                {{ notification.actor.email|first|upper }}
+                            </div>
+                        {% endif %}
+                    </a>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm text-gray-900 dark:text-gray-100">
+                            <a href="{{ path('app_user_profile', {id: notification.actor.id}) }}" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">
+                                {{ notification.actor.email }}
+                            </a>
+                            {% if notification.type == 'follow' %}
+                                started following you
+                            {% elseif notification.type == 'like' %}
+                                liked your post
+                            {% endif %}
+                        </p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                            {{ notification.createdAt|date('M d, Y \\a\\t H:i') }}
+                        </p>
+                    </div>
+                    {% if not notification.seen %}
+                        <span class="w-2.5 h-2.5 bg-indigo-500 rounded-full shrink-0"></span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-8 text-center">
+            <p class="text-gray-500 dark:text-gray-400">No notifications yet.</p>
+        </div>
+    {% endif %}
+{% endblock %}

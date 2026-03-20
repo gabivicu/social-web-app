@@ -2,15 +2,19 @@
 
 namespace App\Service;
 
+use App\Entity\Notification;
 use App\Entity\User;
+use App\Message\SendNotification;
 use App\Repository\MicroPostRepository;
 use App\Repository\UserRepository;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class UserProfileService
 {
     public function __construct(
         private UserRepository $userRepository,
         private MicroPostRepository $microPostRepository,
+        private MessageBusInterface $messageBus,
     ) {
     }
 
@@ -34,6 +38,12 @@ class UserProfileService
 
         $currentUser->follow($userToFollow);
         $this->userRepository->save($currentUser);
+
+        $this->messageBus->dispatch(new SendNotification(
+            $userToFollow->getId(),
+            $currentUser->getId(),
+            Notification::TYPE_FOLLOW,
+        ));
     }
 
     public function unfollow(User $currentUser, int $targetUserId): void

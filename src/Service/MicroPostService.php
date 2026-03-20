@@ -4,14 +4,17 @@ namespace App\Service;
 
 use App\Entity\Comment;
 use App\Entity\MicroPost;
+use App\Entity\Notification;
 use App\Form\CommentType;
 use App\Form\MicroPostType;
+use App\Message\SendNotification;
 use App\Repository\MicroPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class MicroPostService
 {
@@ -20,6 +23,7 @@ class MicroPostService
         private EntityManagerInterface $em,
         private FormFactoryInterface $formFactory,
         private Security $security,
+        private MessageBusInterface $messageBus,
     ) {}
 
     public function findAll(): array
@@ -66,6 +70,15 @@ class MicroPostService
         $microPost = $this->microPostRepository->find($id);
         $microPost->setLikes($microPost->getLikes() + 1);
         $this->em->flush();
+
+        $currentUser = $this->security->getUser();
+        if ($currentUser && $microPost->getAuthor() && $currentUser->getId() !== $microPost->getAuthor()->getId()) {
+            $this->messageBus->dispatch(new SendNotification(
+                $microPost->getAuthor()->getId(),
+                $currentUser->getId(),
+                Notification::TYPE_LIKE,
+            ));
+        }
     }
 
     public function createCommentForm(int $postId, Request $request): FormInterface
