@@ -29,6 +29,8 @@
                                 started following you
                             {% elseif notification.type == 'like' %}
                                 liked your post
+                            {% elseif notification.type == 'comment' %}
+                                commented on your post
                             {% endif %}
                         </p>
                         <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">

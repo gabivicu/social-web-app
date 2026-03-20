@@ -5,7 +5,30 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/var/www/html
-      - /var/www/html/vendor
+      - vendor_data:/var/www/html/vendor
+    environment:
+      APP_ENV: dev
+      APP_SECRET: fa92bdbeaf14b1f67db7cfb4ee2edca7
+      DATABASE_URL: mysql://symfony:symfony@db:3306/symfony_db?serverVersion=8.0
+      MAILER_DSN: smtp://mailer:1025
+      MESSENGER_TRANSPORT_DSN: amqp://guest:guest@rabbitmq:5672/%2f/messages
+    depends_on:
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - symfony
+
+  messenger_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: php bin/console messenger:consume async --time-limit=3600 -vv
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+      - vendor_data:/var/www/html/vendor
     environment:
       APP_ENV: dev
       APP_SECRET: fa92bdbeaf14b1f67db7cfb4ee2edca7
@@ -80,3 +103,4 @@ networks:
 
 volumes:
   db_data:
+  vendor_data:

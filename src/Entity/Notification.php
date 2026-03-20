@@ -10,6 +10,7 @@ class Notification
 {
     public const TYPE_FOLLOW = 'follow';
     public const TYPE_LIKE = 'like';
+    public const TYPE_COMMENT = 'comment';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

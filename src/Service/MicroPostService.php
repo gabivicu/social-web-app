@@ -89,12 +89,21 @@ class MicroPostService
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $this->microPostRepository->find($postId);
+            $currentUser = $this->security->getUser();
             $comment->setPost($post);
-            $comment->setAuthor($this->security->getUser());
-            $comment->setAuthorName($this->security->getUser()->getUserIdentifier());
+            $comment->setAuthor($currentUser);
+            $comment->setAuthorName($currentUser->getUserIdentifier());
             $comment->setCreatedAt(new \DateTime());
             $this->em->persist($comment);
             $this->em->flush();
+
+            if ($currentUser && $post->getAuthor() && $currentUser->getId() !== $post->getAuthor()->getId()) {
+                $this->messageBus->dispatch(new SendNotification(
+                    $post->getAuthor()->getId(),
+                    $currentUser->getId(),
+                    Notification::TYPE_COMMENT,
+                ));
+            }
         }
 
         return $form;
